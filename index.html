@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portfolio — CastleBridge CX</title>
+<meta name="description" content="A curated portfolio of CastleBridge CX work — strategic transformations, course design and creative, supporting elements, and special projects."/>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=DM Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  /* ── Brand backgrounds ── */
+  --black:#000000;--white:#FFFFFF;--lgray:#E5E4E7;
+  --surface:#f7f8fa;
+  /* ── Brand colours ── */
+  --blue:#509ED2;--teal:#2CC0B9;--turquoise:#10BDEB;
+  --yellow:#FFC300;--orange:#FF8C00;--royal:#1D35C0;
+  /* ── Tints ── */
+  --blue-tint:#e8f4fc;--blue-dark:#1a6fa3;
+  --teal-tint:#e0f7f6;--teal-dark:#1a8a84;
+  /* ── Text ── */
+  --ash:#555555;--soft-on-dark:#cccccc;--ink:#111111;
+  /* ── Fonts ── */
+  --fd:'Urbanist',sans-serif;--fb:'DM Sans',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--fb);background:var(--white);color:var(--black);line-height:1.5;}
+a{text-decoration:none;cursor:pointer;color:inherit;}
+button{cursor:pointer;font-family:inherit;}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:3px;}
+
+/* ── Skip link (WCAG 2.4.1) ── */
+.skip{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;}
+.skip:focus{left:1rem;top:1rem;width:auto;height:auto;background:var(--blue);color:#fff;padding:8px 16px;border-radius:4px;z-index:999;font-size:13px;}
+
+/* ── HEADER: logo top-left, 10px padding per style guide ── */
+.pf-header{
+  display:flex;align-items:center;
+  padding:10px 10px 10px 10px;
+  background:var(--black);
+  border-bottom:.5px solid rgba(255,255,255,.08);
+}
+/* ── Logo image (top-left, on black header) ── */
+.logo-link{
+  display:inline-block;
+  padding:6px 10px;
+  line-height:0; /* removes phantom inline-image space */
+}
+.logo-link img{
+  display:block;
+  height: 2px;00px;     /* visual height in the header — tweak here only */
+  width:auto;      /* preserves aspect ratio of the horizontal lockup */
+  max-width:100%;
+}
+@media (max-width:720px){
+  .logo-link img{ height:px; }
+}
+
+/* ── PAGE INTRO ── */
+.pf-intro{
+  background:var(--black);
+  padding:1.25rem 4rem 1.25rem;
+}
+.pf-intro h1{
+  font-family:var(--fd);
+  font-size:clamp(30px,4.2vw,38px);
+  font-weight:400;color:var(--white);
+  letter-spacing:-.03em;line-height:1.1;
+  margin-bottom:.5rem;max-width:780px;
+}
+.pf-intro p{
+  font-size:15px;color:var(--soft-on-dark);
+  line-height:1.2;max-width:620px;
+}
+
+/* ── TAB BAR ── */
+.pf-tabs-wrap{
+  background:var(--black);
+  border-bottom:.5px solid rgba(255,255,255,.08);
+  padding:0 3rem;
+  position:sticky;top:0;z-index:50;
+}
+.pf-tabs{
+  display:flex;flex-wrap:wrap;gap:0;
+  max-width:1400px;margin:0 auto;
+}
+.pf-tab{
+  background:none;border:none;
+  font-family:var(--fd);font-size:15px;font-weight:500;
+  color:rgba(255,255,255,.55);
+  padding:18px 24px;
+  border-bottom:2px solid transparent;
+  transition:color .2s, border-color .2s;
+  letter-spacing:.01em;
+  white-space:nowrap;
+}
+.pf-tab:hover{color:var(--white);}
+.pf-tab[aria-selected="true"]{
+  color:var(--white);
+  border-bottom-color:var(--blue);
+}
+
+/* ── PANELS ── */
+main{background:var(--white);}
+.pf-panel{
+  padding:2rem 3rem 5rem;
+  max-width:1400px;margin:0 auto;
+}
+.pf-panel[hidden]{display:none;}
+.pf-panel-header{
+  margin-bottom:2rem;
+  padding-bottom:.5rem;
+  border-bottom:.5px solid var(--lgray);
+}
+.pf-panel-ey{
+  font-family:var(--fd);font-size:12px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--blue);margin-bottom:.75rem;
+}
+.pf-panel-title{
+  font-family:var(--fd);
+  font-size:clamp(22px,3.2vw,32px);
+  font-weight:400;
+  letter-spacing:-.02em;line-height:1.15;
+  color:var(--black);
+  margin-bottom:.75rem;
+}
+.pf-panel-sub{
+  font-size:15px;color:var(--ash);
+  line-height:1.7;max-width:800px;
+}
+
+/* ── TILE GRID ── */
+.pf-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:1.5rem;
+}
+
+/* ── TILE ── */
+.pf-tile{
+  background:var(--white);
+  border:1px solid var(--lgray);
+  border-radius:12px;
+  overflow:hidden;
+  display:flex;flex-direction:column;
+  text-align:left;
+  width:100%;
+  padding:0;
+  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  cursor:pointer;
+}
+.pf-tile:hover,
+.pf-tile:focus-visible{
+  transform:translateY(-4px);
+  box-shadow:0 12px 28px rgba(0,0,0,.08);
+  border-color:var(--blue);
+}
+.pf-tile-media{
+  aspect-ratio:16/9; /* style guide §6 */
+  background:var(--lgray);
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.pf-tile-media img{
+  width:100%;height:100%;object-fit:cover;display:block;
+}
+/* Use .pf-tile-media.contain when the image is oversized, a diagram, or
+   should be shown WHOLE inside the 16:9 frame instead of cropped to fill.
+   Pads the image with a light-gray frame so it sits cleanly. */
+.pf-tile-media.contain{
+  background:var(--lgray);
+  padding:12px;
+}
+.pf-tile-media.contain img{
+  object-fit:contain;
+}
+/* Placeholder visual when no image is available */
+.pf-tile-media.placeholder{
+  background:linear-gradient(135deg,#0a1622 0%,#1a3a5c 60%,var(--blue) 100%);
+}
+.pf-tile-media .ph-mark{
+  font-family:var(--fd);font-weight:500;font-size:18px;
+  color:rgba(255,255,255,.92);letter-spacing:-.01em;
+}
+.pf-tile-media .ph-mark .bridge{color:var(--turquoise);}
+
+.pf-tile-body{
+  padding:1.25rem 1.25rem 1.4rem;
+  display:flex;flex-direction:column;gap:.6rem;
+  flex:1;
+}
+.pf-tile-tag{
+  align-self:flex-start;
+  font-family:var(--fd);font-size:10px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:var(--teal-dark);background:var(--teal-tint);
+  padding:3px 10px;border-radius:20px;
+}
+.pf-tile-tag.t-blue{color:var(--blue-dark);background:var(--blue-tint);}
+.pf-tile-tag.t-neutral{color:var(--ash);background:var(--lgray);}
+
+.pf-tile-title{
+  font-family:var(--fd);font-size:18px;font-weight:500;
+  color:var(--black);letter-spacing:-.01em;line-height:1.3;
+}
+.pf-tile-desc{
+  font-size:13px;color:var(--ash);line-height:1.6;
+}
+.pf-tile-meta{
+  display:flex;align-items:center;gap:.5rem;
+  margin-top:auto;padding-top:.75rem;
+  font-family:var(--fd);font-size:12px;font-weight:600;
+  color:var(--blue);
+}
+.pf-tile-meta::after{
+  content:"→";transition:transform .2s;
+}
+.pf-tile:hover .pf-tile-meta::after{transform:translateX(3px);}
+
+/* ── EMPTY STATE ── */
+.pf-empty{
+  grid-column:1/-1;
+  padding:3rem 1.5rem;
+  border:1px dashed var(--lgray);
+  border-radius:12px;
+  text-align:center;
+  color:var(--ash);
+  font-size:14px;
+}
+
+/* ── FOOTER ── */
+.pf-foot{
+  background:var(--black);color:var(--soft-on-dark);
+  padding:2rem 3rem;
+  font-size:12px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:1rem;
+}
+.pf-foot a{color:#7cb6dd;}
+.pf-foot a:hover{color:var(--white);text-decoration:underline;}
+
+/* ── RESPONSIVE ── */
+@media (max-width:720px){
+  .pf-header,.pf-intro,.pf-tabs-wrap,.pf-panel,.pf-foot{padding-left:1.25rem;padding-right:1.25rem;}
+  .pf-tabs{overflow-x:auto;flex-wrap:nowrap;}
+  .pf-tab{padding:14px 16px;font-size:12px;}
+  .pf-grid{grid-template-columns:1fr;gap:1.25rem;}
+}
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip">Skip to main content</a>
+
+<!-- HEADER: logo top-left only, no public nav -->
+<header class="pf-header" role="banner">
+  <a href="#" class="logo-link" aria-label="CastleBridgeCX home">
+    <img src="Tranparent_CastleBridge_CX_Horizontal_Black_and_Blue_on_Black.png" alt="CastleBridgeCX logo"/>
+  </a>
+</header>
+
+
+<!-- INTRO -->
+<section class="pf-intro" aria-labelledby="pf-heading">
+  <h1 id="pf-heading">A curated selection of our work.</h1>
+</section>
+
+<!-- TABS -->
+<div class="pf-tabs-wrap">
+  <div class="pf-tabs" role="tablist" aria-label="Portfolio categories">
+    <button class="pf-tab" role="tab" id="tab-strategic" aria-controls="panel-strategic" aria-selected="true" tabindex="0">Strategic Transformations</button>
+    <button class="pf-tab" role="tab" id="tab-course"    aria-controls="panel-course"    aria-selected="false" tabindex="-1">Course Design &amp; Creative</button>
+    <button class="pf-tab" role="tab" id="tab-support"   aria-controls="panel-support"   aria-selected="false" tabindex="-1">Supporting Elements</button>
+    <button class="pf-tab" role="tab" id="tab-special"   aria-controls="panel-special"   aria-selected="false" tabindex="-1">Special Projects</button>
+  </div>
+</div>
+
+<main id="main">
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       PANEL 1: STRATEGIC TRANSFORMATIONS
+       To add a tile: copy any <a class="pf-tile">…</a> block.
+       Update href, image (or use placeholder), tag class, title, desc.
+       Tag classes: (default = teal), .t-blue, .t-neutral
+       ════════════════════════════════════════════════════════════════════ -->
+  <section class="pf-panel" id="panel-strategic" role="tabpanel" aria-labelledby="tab-strategic">
+    <div class="pf-panel-header">
+      <p class="pf-panel-ey">Strategic Transformations</p>
+      <h2 class="pf-panel-title">Reshaping how organizations leverage content to drive business outcomes.</h2>
+      <p class="pf-panel-sub">Programs that redefined strategy, information architecture, offer, operating models.</p>
+    </div>
+
+    <div class="pf-grid">
+
+      <a class="pf-tile" href="#" aria-label="View project: AI-powered content design and personalization">
+        <div class="pf-tile-media"><img src="AICardsmall.png" alt="Abstract visual representing AI-powered content workflows"/></div>
+        <div class="pf-tile-body">
+          <span class="pf-tile-tag">AI Enablement</span>
+          <h3 class="pf-tile-title">AI-powered content design &amp; personalization</h3>
+          <p class="pf-tile-desc">Two-phased program combining team enablement with tailored AI tooling for content creation at scale.</p>
+          <span class="pf-tile-meta">View project</span>
+        </div>
+      </a>
+
+      <a class="pf-tile" href="#" aria-label="View project: Unified content channels and architecture">
+        <div class="pf-tile-media"><img src="orchestrateCardsmall.png" alt="Visual representing unified content channels and information architecture"/></div>
+        <div class="pf-tile-body">
+          <span class="pf-tile-tag t-blue">Information Architecture</span>
+          <h3 class="pf-tile-title">Unified content channels &amp; architecture</h3>
+          <p class="pf-tile-desc">Shared taxonomy, unified search, and phased system consolidation across siloed content teams.</p>
+          <span class="pf-tile-meta">View project</span>
+        </div>
+      </a>
+
+      <a class="pf-tile" href="#" aria-label="View project: Multi-channel digital enablement from scratch">
+        <div class="pf-tile-media"><img src="DRUThumbnail.png" alt="Visual representing DataRobot University landing page"/></div>
+        <div class="pf-tile-body">
+          <span class="pf-tile-tag">Digital Adoption</span>
+          <h3 class="pf-tile-title">Multi-channel digital enablement from scratch</h3>
+          <p class="pf-tile-desc">Shifted from high-touch onboarding to scalable self-service enablement, certification, and community.</p>
+           <span class="pf-tile-meta">View project</span>
+        </div>
+      </a>
+
+      <a class="pf-tile" href="#" aria-label="View project: Modernize legacy content systems">
+        <div class="pf-tile-media"><img src="oktathumbnail.png" alt="Visual representing modern Okta platforms"/></div>
+        <div class="pf-tile-body">
+          <span class="pf-tile-tag t-blue">Modernization</span>
+          <h3 class="pf-tile-title">Legacy content system modernization</h3>
+          <p class="pf-tile-desc">Revamped experience, catalog, and information architecture to support a modern content strategy.</p>
+          <span class="pf-tile-meta">View project</span>
+        </div>
+      </a>
+
+      <!-- TILE TEMPLATE — copy this block to add more tiles
+           • Put the real path in the OUTER <a href>. Do NOT nest a second <a> inside .pf-tile-meta.
+           • Add target="_blank" rel="noopener noreferrer" if you want a new tab.
+           • Use a relative path (e.g. "Courses/Foo/index.html"), not a leading slash.
+           • To use a real image: <div class="pf-tile-media"><img src="thumb.png" alt="..."/></div>
+           • To use a placeholder: <div class="pf-tile-media placeholder">...</div>
+           • To shrink an oversize image: add the "contain" modifier — see Visual Design tile below.
+      <a class="pf-tile" href="Courses/YourCourse/index.html" target="_blank" rel="noopener noreferrer" aria-label="View project: TITLE (opens in new tab)">
+        <div class="pf-tile-media"><img src="your-thumb.png" alt="Descriptive alt text"/></div>
+        <div class="pf-tile-body">
+          <span class="pf-tile-tag">Tag</span>
+          <h3 class="pf-tile-title">Project title</h3>
+          <p class="pf-tile-desc">One-sentence project description.</p>
+          <span class="pf-tile-meta">View project</span>
+        </div>
+      </a>
+      -->
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       PANEL 2: COURSE DESIGN & CREATIVE
+       ════════════════════════════════════════════════════════════════════ -->
+  <section class="pf-panel" id="panel-course" role="tabpanel" aria-labelledby="tab-course" hidden>
+    <div class="pf-panel-header">
+      <p class="pf-panel-ey">Course Design &amp; Creative</p>
+      <h2 class="pf-panel-title">Engaging learning experiences that build skills for the real world.</h2>
+    </div>
+
+    <div class="pf-grid">
+      <a class="pf-tile" href="Courses/PreparingDataforAIML/index.html" target="_blank" rel="noopener noreferrer" aria-label="View project: Preparing Data for AI and Machine Learning (opens in new tab)">
+       <div class="pf-tile-media"><img src="DataAnalysisThumbnail.png" alt="Visual representing Data Analysis course"/></div>
+        <div class="pf-tile-body">
+          <span class="pf-tile-tag">Digital Course</span>
+          <h3 class="pf-tile-title">Preparing Data for AI and Machine Learning</h3>
+          <p class="pf-tile-desc">Setting yourself up for success in an AI/ML project.</p>
+         <span class="pf-tile-meta">View project</span>
+        </div>
+      </a>
+
+      <a class="pf-tile" href="#" aria-label="View project: Gamification of learning">
+        <div class="pf-tile-media"><img src="gamethumbnail.png" alt="Visual gamified assessment"/></div>
+        <div class="pf-tile-body">
+          <span class="pf-tile-tag t-blue">Assessment</span>
+          <h3 class="pf-tile-title">Learning Feedback</h3>
+          <p class="pf-tile-desc">Gamified assessment that increases engagement and retention.</p>
+          <span class="pf-tile-meta">View project</span>
+        </div>
+      </a>
+
+      <a class="pf-tile" href="#" aria-label="View project: Visual Design and Storytelling">
+       <div class="pf-tile-media contain"><img src="organizerboxessmall.png" alt="Visual representing organization"/></div>
+        <div class="pf-tile-body">
+          <span class="pf-tile-tag t-neutral">Digital Course</span>
+          <h3 class="pf-tile-title">Visual Design and Storytelling</h3>
+          <p class="pf-tile-desc">Principles for creating compelling visual narratives to support learning.</p>
+          <span class="pf-tile-meta">View project</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       PANEL 3: SUPPORTING ELEMENTS
+       ════════════════════════════════════════════════════════════════════ -->
+  <section class="pf-panel" id="panel-support" role="tabpanel" aria-labelledby="tab-support" hidden>
+    <div class="pf-panel-header">
+      <p class="pf-panel-ey">Supporting Elements</p>
+      <h2 class="pf-panel-title">Style guides, reference materials, and tooling.</h2>
+    </div>
+    <div class="pf-grid">
+
+      <a class="pf-tile" href="#" aria-label="View project: Content style guide and component library">
+        <div class="pf-tile-media placeholder"><span class="ph-mark">Castle<span class="bridge">Bridge</span>CX</span></div>
+        <div class="pf-tile-body">
+          <span class="pf-tile-tag">Style Guide</span>
+          <h3 class="pf-tile-title">Content style guide &amp; AI Component library</h3>
+          <p class="pf-tile-desc">Voice, formatting, and reusable AI skill templates to accelerate consistent course development.</p>
+          <span class="pf-tile-meta">View project</span>
+        </div>
+      </a>
+
+      <a class="pf-tile" href="#" aria-label="View project: Job aids and quick-reference cards">
+        <div class="pf-tile-media placeholder"><span class="ph-mark">Castle<span class="bridge">Bridge</span>CX</span></div>
+        <div class="pf-tile-body">
+          <span class="pf-tile-tag t-blue">Job Aids</span>
+          <h3 class="pf-tile-title">Quick-reference cards &amp; job aids</h3>
+          <p class="pf-tile-desc">Point-of-need reinforcement for frequently-used workflows.</p>
+          <span class="pf-tile-meta">View project</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       PANEL 4: SPECIAL PROJECTS
+       ════════════════════════════════════════════════════════════════════ -->
+  <section class="pf-panel" id="panel-special" role="tabpanel" aria-labelledby="tab-special" hidden>
+    <div class="pf-panel-header">
+      <p class="pf-panel-ey">Special Projects</p>
+      <h2 class="pf-panel-title">One-of-a-kind work, worth its own spotlight.</h2>
+    </div>
+
+    <div class="pf-grid">
+
+      <a class="pf-tile" href="#" aria-label="View project: Conference keynote and workshop design">
+        <div class="pf-tile-media placeholder"><span class="ph-mark">Castle<span class="bridge">Bridge</span>CX</span></div>
+        <div class="pf-tile-body">
+          <span class="pf-tile-tag">Speaking</span>
+          <h3 class="pf-tile-title">Conference keynote &amp; workshop design</h3>
+          <p class="pf-tile-desc">Industry talks and hands-on workshops on content strategy and AI in enablement.</p>
+          <span class="pf-tile-meta">View project</span>
+        </div>
+      </a>
+
+      <a class="pf-tile" href="#" aria-label="View project: Research initiative on content effectiveness">
+        <div class="pf-tile-media placeholder"><span class="ph-mark">Castle<span class="bridge">Bridge</span>CX</span></div>
+        <div class="pf-tile-body">
+          <span class="pf-tile-tag t-blue">Research</span>
+          <h3 class="pf-tile-title">Research on content effectiveness</h3>
+          <p class="pf-tile-desc">Mixed-methods study mapping content interactions to product adoption outcomes.</p>
+          <span class="pf-tile-meta">View project</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="pf-foot" role="contentinfo">
+  <span>&copy; CastleBridge CX — Portfolio (private view)</span>
+  <span>Brought to you by <a href="#">CastleBridgeCX, LLC. Copyright © 2026. All rights reserved.</a></span>
+</footer>
+
+<script>
+(function(){
+  const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+  const panels = tabs.map(t => document.getElementById(t.getAttribute('aria-controls')));
+
+  function activate(tab, focusIt){
+    tabs.forEach((t,i) => {
+      const selected = t === tab;
+      t.setAttribute('aria-selected', selected ? 'true' : 'false');
+      t.tabIndex = selected ? 0 : -1;
+      panels[i].hidden = !selected;
+    });
+    if(focusIt) tab.focus();
+  }
+
+  tabs.forEach((tab, idx) => {
+    tab.addEventListener('click', () => activate(tab, false));
+    tab.addEventListener('keydown', (e) => {
+      let next = null;
+      if(e.key === 'ArrowRight') next = tabs[(idx + 1) % tabs.length];
+      else if(e.key === 'ArrowLeft') next = tabs[(idx - 1 + tabs.length) % tabs.length];
+      else if(e.key === 'Home') next = tabs[0];
+      else if(e.key === 'End') next = tabs[tabs.length - 1];
+      if(next){ e.preventDefault(); activate(next, true); }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

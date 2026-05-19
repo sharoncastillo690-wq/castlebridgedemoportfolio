@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bloom's Digital Taxonomy Verbs — CastleBridgeCX Cheat Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --blue: #509ED2; --teal: #2CC0B9; --orange: #FF8C00; --black: #000; --white: #fff; --lgray: #E5E4E7;
+  --font-h: 'Urbanist', sans-serif; --font-b: 'Inter', sans-serif;
+}
+body { font-family: var(--font-b); background: #f0f0f0; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 16px; }
+.sheet { background: var(--white); display: flex; flex-direction: column; width: 720px; }
+
+/* Header */
+.sheet-header {
+  background: var(--black);
+  padding: 10px 10px 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.logo-text { font-family: var(--font-h); font-weight: 700; font-size: 10px; color: #fff; white-space: nowrap; position: absolute; left: 10px; }
+.logo-text span { color: var(--blue); }
+.sheet-title-block { text-align: center; }
+.sheet-title { font-family: var(--font-h); font-size: 18px; font-weight: 400; color: #fff; line-height: 1.2; letter-spacing: 0.02em; }
+.sheet-title em { font-style: normal; color: #fff; }
+
+/* Accent bar */
+.accent-bar { height: 3px; background: linear-gradient(to right, var(--blue), var(--teal)); }
+
+/* Note strip */
+.note-strip { background: var(--black); padding: 3px 10px; font-family: var(--font-b); font-size: 7px; color: #888; font-style: italic; text-align: right; }
+
+/* LOTS / HOTS label row */
+.lh-row { display: grid; grid-template-columns: repeat(6, 120px); }
+.lh-cell { padding: 3px 10px; display: flex; align-items: center; gap: 5px; }
+.lh-lots { background: #1c1c1c; border-right: 1px solid #2a2a2a; }
+.lh-hots { background: #0b2236; border-right: 1px solid #102d46; }
+.lh-hots-teal { background: #061f1e; }
+.lh-lots-cont { background: #1c1c1c; border-right: 1px solid #2a2a2a; display: flex; align-items: center; padding: 3px 10px; }
+.lh-hots-cont { background: #0b2236; border-right: 1px solid #102d46; display: flex; align-items: center; padding: 3px 10px; }
+.lh-label { font-family: var(--font-h); font-size: 7px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+.lh-lots .lh-label { color: #777; }
+.lh-hots .lh-label { color: var(--blue); }
+.lh-hots-teal .lh-label { color: var(--teal); }
+.lh-lots-cont .lh-label, .lh-hots-cont .lh-label { visibility: hidden; }
+.lh-line { flex: 1; height: 1px; }
+.lh-lots .lh-line, .lh-lots-cont .lh-line { background: linear-gradient(to right, #333, #555); }
+.lh-hots .lh-line, .lh-hots-cont .lh-line { background: linear-gradient(to right, #1a4060, var(--blue)); }
+.lh-hots-teal .lh-line { background: linear-gradient(to right, #0e4a48, var(--teal)); }
+
+/* Grid */
+.tiers-grid { display: grid; grid-template-columns: repeat(6, 120px); }
+.tier-col { border-right: 1px solid var(--lgray); display: flex; flex-direction: column; }
+.tier-col:last-child { border-right: none; }
+
+/* Col headers */
+.tier-col-head { padding: 7px 10px 4px; border-bottom: 2px solid var(--lgray); height: 68px; display: flex; flex-direction: column; justify-content: flex-start; }
+.tier-name { font-family: var(--font-h); font-size: 12px; font-weight: 700; color: var(--black); margin-bottom: 3px; }
+.tier-def { font-family: var(--font-b); font-size: 7px; color: #777; line-height: 1.5; }
+.tier-col.hots .tier-col-head { background: #f4faff; border-bottom-color: var(--blue); }
+.tier-col.hots .tier-name { color: var(--blue); }
+.tier-col.hots-teal .tier-col-head { background: #f1fefd; border-bottom-color: var(--teal); }
+.tier-col.hots-teal .tier-name { color: #177a75; }
+
+/* Verb list */
+.verb-list { padding: 5px 10px 10px; display: flex; flex-direction: column; list-style: none; }
+.verb { font-family: var(--font-b); font-size: 9.5px; color: var(--black); line-height: 1.5; padding: 1px 0; border-bottom: 1px solid #f3f3f3; white-space: nowrap; }
+.verb:last-child { border-bottom: none; }
+.tier-col.hots .verb { color: #0d3f60; }
+.tier-col.hots-teal .verb { color: #083b38; }
+
+/* Footer */
+.sheet-footer { background: var(--lgray); padding: 6px 10px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #d8d7da; gap: 16px; }
+.footer-credit { font-family: var(--font-b); font-size: 7.5px; color: #888; }
+.footer-brand { font-family: var(--font-b); font-size: 8px; color: #777; white-space: nowrap; }
+.footer-brand strong { color: var(--blue); }
+
+@media print {
+  body { background: none; padding: 0; display: block; }
+  .sheet { width: 100%; display: flex; }
+  @page { size: A4 landscape; margin: 0; }
+}
+</style>
+</head>
+<body>
+<div class="sheet" role="main">
+
+  <header class="sheet-header">
+    <span class="logo-text">Castle<span>Bridge</span>CX</span>
+    <div class="sheet-title-block">
+      <h1 class="sheet-title"><em>Objective Verb</em> Reference</h1>
+    </div>
+  </header>
+
+  <div class="accent-bar" aria-hidden="true"></div>
+  <div class="note-strip">It's possible to write objectives at a higher or lower level with the same verbs. Focus on the goal.</div>
+
+  <!-- LOTS / HOTS labels sit directly above their respective columns -->
+  <div class="lh-row" aria-label="Cognitive level groupings">
+    <div class="lh-cell lh-lots"><span class="lh-label">Lower-Order Thinking (LOTS)</span><span class="lh-line"></span></div>
+    <div class="lh-cell lh-lots-cont"><span class="lh-label">—</span><span class="lh-line"></span></div>
+    <div class="lh-cell lh-lots-cont"><span class="lh-label">—</span><span class="lh-line"></span></div>
+    <div class="lh-cell lh-hots"><span class="lh-label">Higher-Order Thinking (HOTS)</span><span class="lh-line"></span></div>
+    <div class="lh-cell lh-hots-cont"><span class="lh-label">—</span><span class="lh-line"></span></div>
+    <div class="lh-cell lh-hots-teal"><span class="lh-label"></span><span class="lh-line"></span></div>
+  </div>
+
+  <div class="tiers-grid" role="region" aria-label="Bloom's Digital Taxonomy tiers and verbs">
+
+    <!-- 1: Remember -->
+    <div class="tier-col">
+      <div class="tier-col-head">
+        <h2 class="tier-name">Remember</h2>
+        <p class="tier-def">Use memory to recall information or facts.</p>
+      </div>
+      <ul class="verb-list" aria-label="Remember verbs">
+        <li class="verb">Define</li>
+        <li class="verb">Describe</li>
+        <li class="verb">Enumerate</li>
+        <li class="verb">Favorite</li>
+        <li class="verb">Highlight</li>
+        <li class="verb">Identify</li>
+        <li class="verb">Label</li>
+        <li class="verb">List</li>
+        <li class="verb">Locate</li>
+        <li class="verb">Match</li>
+        <li class="verb">Name</li>
+        <li class="verb">Number</li>
+        <li class="verb">Recall</li>
+        <li class="verb">Read</li>
+        <li class="verb">Recognize</li>
+        <li class="verb">Record</li>
+        <li class="verb">Reference</li>
+        <li class="verb">Retrieve</li>
+        <li class="verb">Search</li>
+        <li class="verb">Select</li>
+        <li class="verb">State</li>
+        <li class="verb">Tabulate</li>
+        <li class="verb">Visualize</li>
+      </ul>
+    </div>
+
+    <!-- 2: Understand -->
+    <div class="tier-col">
+      <div class="tier-col-head">
+        <h2 class="tier-name">Understand</h2>
+        <p class="tier-def">Obtain meaning from concepts.</p>
+      </div>
+      <ul class="verb-list" aria-label="Understand verbs">
+        <li class="verb">Annotate</li>
+        <li class="verb">Associate</li>
+        <li class="verb">Categorize</li>
+        <li class="verb">Classify</li>
+        <li class="verb">Comment</li>
+        <li class="verb">Compare</li>
+        <li class="verb">Contrast</li>
+        <li class="verb">Convert</li>
+        <li class="verb">Differentiate</li>
+        <li class="verb">Discuss</li>
+        <li class="verb">Exemplify</li>
+        <li class="verb">Explain</li>
+        <li class="verb">Extend</li>
+        <li class="verb">Gather</li>
+        <li class="verb">Generalize</li>
+        <li class="verb">Group</li>
+        <li class="verb">Indicate</li>
+        <li class="verb">Infer</li>
+        <li class="verb">Interpret</li>
+        <li class="verb">Paraphrase</li>
+        <li class="verb">Relate</li>
+        <li class="verb">Report</li>
+        <li class="verb">Subscribe</li>
+        <li class="verb">Summarize</li>
+        <li class="verb">Tag</li>
+      </ul>
+    </div>
+
+    <!-- 3: Apply -->
+    <div class="tier-col">
+      <div class="tier-col-head">
+        <h2 class="tier-name">Apply</h2>
+        <p class="tier-def">Put concepts into practice.</p>
+      </div>
+      <ul class="verb-list" aria-label="Apply verbs">
+        <li class="verb">Administer</li>
+        <li class="verb">Apply</li>
+        <li class="verb">Backup</li>
+        <li class="verb">Calculate</li>
+        <li class="verb">Change</li>
+        <li class="verb">Choose</li>
+        <li class="verb">Code</li>
+        <li class="verb">Collect</li>
+        <li class="verb">Compile</li>
+        <li class="verb">Complete</li>
+        <li class="verb">Compute</li>
+        <li class="verb">Configure</li>
+        <li class="verb">Connect</li>
+        <li class="verb">Construct</li>
+        <li class="verb">Deploy</li>
+        <li class="verb">Demonstrate</li>
+        <li class="verb">Determine</li>
+        <li class="verb">Display</li>
+        <li class="verb">Document</li>
+        <li class="verb">Edit</li>
+        <li class="verb">Encrypt</li>
+        <li class="verb">Examine</li>
+        <li class="verb">Execute</li>
+        <li class="verb">Experiment</li>
+        <li class="verb">Graph</li>
+        <li class="verb">Implement</li>
+        <li class="verb">Install</li>
+        <li class="verb">Interview</li>
+        <li class="verb">Investigate</li>
+        <li class="verb">Load</li>
+        <li class="verb">Manipulate</li>
+        <li class="verb">Map</li>
+        <li class="verb">Operate</li>
+        <li class="verb">Perform</li>
+        <li class="verb">Prepare</li>
+        <li class="verb">Provision</li>
+        <li class="verb">Recover</li>
+        <li class="verb">Restore</li>
+        <li class="verb">Run</li>
+        <li class="verb">Schedule</li>
+        <li class="verb">Share</li>
+        <li class="verb">Store</li>
+        <li class="verb">Train</li>
+        <li class="verb">Upload</li>
+        <li class="verb">Use</li>
+        <li class="verb">Virtualize</li>
+      </ul>
+    </div>
+
+    <!-- 4: Analyze -->
+    <div class="tier-col hots">
+      <div class="tier-col-head">
+        <h2 class="tier-name">Analyze</h2>
+        <p class="tier-def">Determine how parts relate or root cause.</p>
+      </div>
+      <ul class="verb-list" aria-label="Analyze verbs">
+        <li class="verb">Analyze</li>
+        <li class="verb">Appraise</li>
+        <li class="verb">Automate</li>
+        <li class="verb">Break down</li>
+        <li class="verb">Chart</li>
+        <li class="verb">Conclude</li>        <li class="verb">Contextualize</li>
+        <li class="verb">Correlate</li>
+        <li class="verb">Deconstruct</li>
+        <li class="verb">Decompose</li>
+        <li class="verb">Deduce</li>
+        <li class="verb">Diagram</li>
+        <li class="verb">Discriminate</li>
+        <li class="verb">Distinguish</li>
+        <li class="verb">Divide</li>
+        <li class="verb">Estimate</li>
+        <li class="verb">Illustrate</li>
+        <li class="verb">Infer</li>
+        <li class="verb">Integrate</li>
+        <li class="verb">Link</li>
+        <li class="verb">Mind map</li>
+        <li class="verb">Model</li>
+        <li class="verb">Order</li>
+        <li class="verb">Organize</li>
+        <li class="verb">Outline</li>
+        <li class="verb">Plan</li>
+        <li class="verb">Point out</li>
+        <li class="verb">Prioritize</li>
+        <li class="verb">Question</li>
+        <li class="verb">Separate</li>
+        <li class="verb">Structure</li>
+        <li class="verb">Survey</li>
+        <li class="verb">Trace</li>
+        <li class="verb">Update</li>
+      </ul>
+    </div>
+
+    <!-- 5: Evaluate -->
+    <div class="tier-col hots">
+      <div class="tier-col-head">
+        <h2 class="tier-name">Evaluate</h2>
+        <p class="tier-def">Use criteria to make judgements.</p>
+      </div>
+      <ul class="verb-list" aria-label="Evaluate verbs">
+        <li class="verb">Assess</li>
+        <li class="verb">Check</li>
+        <li class="verb">Conclude</li>
+        <li class="verb">Consider</li>
+        <li class="verb">Convince</li>
+        <li class="verb">Critique</li>
+        <li class="verb">Debate</li>
+        <li class="verb">Debug</li>
+        <li class="verb">Decide</li>
+        <li class="verb">Defend</li>
+        <li class="verb">Detect</li>
+        <li class="verb">Evaluate</li>
+        <li class="verb">Grade</li>
+        <li class="verb">Hypothesize</li>
+        <li class="verb">Judge</li>
+        <li class="verb">Justify</li>
+        <li class="verb">Measure</li>
+        <li class="verb">Moderate</li>
+        <li class="verb">Monitor</li>
+        <li class="verb">Optimize</li>
+        <li class="verb">Persuade</li>
+        <li class="verb">Post</li>
+        <li class="verb">Predict</li>
+        <li class="verb">Prove</li>
+        <li class="verb">Rate</li>
+        <li class="verb">Recommend</li>
+        <li class="verb">Reflect</li>
+        <li class="verb">Reframe</li>
+        <li class="verb">Review</li>
+        <li class="verb">Revise</li>
+        <li class="verb">Score</li>
+        <li class="verb">Support</li>
+        <li class="verb">Test</li>
+        <li class="verb">Validate</li>
+        <li class="verb">Value</li>
+        <li class="verb">Verify</li>
+      </ul>
+    </div>
+
+    <!-- 6: Create -->
+    <div class="tier-col hots-teal">
+      <div class="tier-col-head">
+        <h2 class="tier-name">Create</h2>
+        <p class="tier-def">Design new patterns.</p>
+      </div>
+      <ul class="verb-list" aria-label="Create verbs">
+        <li class="verb">Adapt</li>
+        <li class="verb">Animate</li>
+        <li class="verb">Assemble</li>
+        <li class="verb">Build</li>
+        <li class="verb">Collaborate</li>
+        <li class="verb">Compose</li>
+        <li class="verb">Create</li>
+        <li class="verb">Design</li>
+        <li class="verb">Develop</li>
+        <li class="verb">Devise</li>
+        <li class="verb">Direct</li>
+        <li class="verb">Facilitate</li>
+        <li class="verb">Formulate</li>
+        <li class="verb">Generate</li>
+        <li class="verb">Invent</li>
+        <li class="verb">Lead</li>
+        <li class="verb">Make</li>
+        <li class="verb">Manage</li>
+        <li class="verb">Mix / Remix</li>
+        <li class="verb">Modify</li>
+        <li class="verb">Negotiate</li>
+        <li class="verb">Originate</li>
+        <li class="verb">Plan</li>
+        <li class="verb">Produce</li>
+        <li class="verb">Program</li>
+        <li class="verb">Publish</li>
+        <li class="verb">Role play</li>
+        <li class="verb">Script</li>
+        <li class="verb">Secure</li>
+        <li class="verb">Simulate</li>
+        <li class="verb">Solve</li>
+        <li class="verb">Structure</li>
+        <li class="verb">Write</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <footer class="sheet-footer">
+    <p class="footer-brand">© 2026 CastleBridgeCX, LLC. All rights reserved.</p>
+    <p class="footer-credit">This curated list includes items from Andrew Churches Bloom's Digital Taxonomy Verbs and ACM CCECC Committee's Bloom's for Computing.</p>
+  </footer>
+
+</div>
+</body>
+</html>
