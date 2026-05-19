@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Whitespace Exploration — Visual Design</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              primary:   '#1B3A5C',
+              secondary: '#2E7BB8',
+              accent:    '#E87722',
+              neutral:   '#F4F6F9',
+            }
+          },
+          fontFamily: {
+            heading: ['Sora', 'sans-serif'],
+            body:    ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom transitions not expressible in Tailwind alone */
+    .content-block {
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Viewport simulator frame */
+    .viewport-frame {
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    /* Slider thumb styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      border-radius: 3px;
+      background: #CBD5E1;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #1B3A5C;
+      cursor: pointer;
+      border: 2px solid white;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+    }
+    input[type="range"]:focus::-webkit-slider-thumb {
+      box-shadow: 0 0 0 3px rgba(46,123,184,0.4);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #1B3A5C;
+      cursor: pointer;
+      border: 2px solid white;
+    }
+
+    /* Warning pulse when overcrowded */
+    @keyframes warning-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.3); }
+      50%       { box-shadow: 0 0 0 6px rgba(239,68,68,0); }
+    }
+    .overcrowded {
+      animation: warning-pulse 1.5s ease-in-out infinite;
+    }
+
+    /* Smooth colour fade on warning bar */
+    .warning-bar {
+      transition: background-color 0.4s ease, opacity 0.4s ease;
+    }
+
+    /* Device size button active state */
+    .device-btn.active {
+      background-color: #1B3A5C;
+      color: white;
+      border-color: #1B3A5C;
+    }
+
+    /* Grid inner content fade when scale very small */
+    .grid-canvas {
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body class="h-full font-body bg-brand-neutral flex flex-col">
+
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:bg-brand-primary focus:text-white focus:px-4 focus:py-2 focus:rounded focus:z-50">Skip to main content</a>
+
+  <main id="main-content" class="flex flex-col flex-1 min-h-0 px-4 py-5 max-w-7xl mx-auto w-full">
+
+    <!-- Intro text -->
+    <div class="mb-4">
+      <p class="font-body text-gray-600 text-sm leading-relaxed max-w-2xl">
+        Overcrowding makes it difficult for learners to process information. Add content blocks to the canvas, then adjust padding and screen size to see what happens.
+      </p>
+    </div>
+
+    <!-- Main workspace: controls left, canvas right -->
+    <div class="flex flex-col lg:flex-row gap-5 flex-1 min-h-0">
+
+      <!-- ── LEFT PANEL: controls ───────────────────────────────────── -->
+      <aside class="w-full lg:w-64 flex-shrink-0 flex flex-col gap-4" aria-label="Controls">
+
+        <!-- Content palette -->
+        <section aria-labelledby="palette-heading" class="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+          <h2 id="palette-heading" class="font-heading text-sm font-semibold text-brand-primary mb-3 uppercase tracking-wide">Content Blocks</h2>
+          <div id="palette" class="space-y-2" aria-label="Add or remove content blocks">
+            <!-- Rendered by JS -->
+          </div>
+        </section>
+
+        <!-- Padding slider -->
+        <section aria-labelledby="padding-heading" class="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+          <div class="flex justify-between items-center mb-2">
+            <h2 id="padding-heading" class="font-heading text-sm font-semibold text-brand-primary uppercase tracking-wide">Padding</h2>
+            <span id="padding-value" class="font-body text-xs font-semibold text-brand-secondary tabular-nums" aria-live="polite"></span>
+          </div>
+          <input
+            type="range"
+            id="padding-slider"
+            min="4" max="32" step="2"
+            class="w-full"
+            aria-labelledby="padding-heading"
+            aria-valuemin="4" aria-valuemax="32"
+          >
+          <div class="flex justify-between mt-1">
+            <span class="font-body text-xs text-gray-400">Tight</span>
+            <span class="font-body text-xs text-gray-400">Spacious</span>
+          </div>
+        </section>
+
+        <!-- Screen size selector -->
+        <section aria-labelledby="screen-heading" class="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+          <h2 id="screen-heading" class="font-heading text-sm font-semibold text-brand-primary mb-3 uppercase tracking-wide">Screen Size</h2>
+          <div class="flex gap-2" role="group" aria-labelledby="screen-heading">
+            <button
+              class="device-btn flex-1 flex flex-col items-center gap-1 border-2 border-gray-200 rounded-lg py-2 px-1 text-gray-500 hover:border-brand-secondary hover:text-brand-secondary focus:outline-none focus:ring-4 focus:ring-blue-200 transition-colors"
+              data-device="mobile"
+              aria-pressed="false"
+              title="Mobile (375px)"
+            >
+              <!-- Mobile icon SVG -->
+              <svg width="18" height="22" viewBox="0 0 18 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2" y="1" width="14" height="20" rx="2"/>
+                <circle cx="9" cy="18" r="1" fill="currentColor" stroke="none"/>
+              </svg>
+              <span class="font-body text-xs font-medium">Mobile</span>
+            </button>
+            <button
+              class="device-btn flex-1 flex flex-col items-center gap-1 border-2 border-gray-200 rounded-lg py-2 px-1 text-gray-500 hover:border-brand-secondary hover:text-brand-secondary focus:outline-none focus:ring-4 focus:ring-blue-200 transition-colors"
+              data-device="tablet"
+              aria-pressed="false"
+              title="Tablet (768px)"
+            >
+              <!-- Tablet icon SVG -->
+              <svg width="20" height="22" viewBox="0 0 20 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="1" y="1" width="18" height="20" rx="2"/>
+                <circle cx="10" cy="18.5" r="1" fill="currentColor" stroke="none"/>
+              </svg>
+              <span class="font-body text-xs font-medium">Tablet</span>
+            </button>
+            <button
+              class="device-btn active flex-1 flex flex-col items-center gap-1 border-2 border-gray-200 rounded-lg py-2 px-1 text-gray-500 hover:border-brand-secondary hover:text-brand-secondary focus:outline-none focus:ring-4 focus:ring-blue-200 transition-colors"
+              data-device="desktop"
+              aria-pressed="true"
+              title="Desktop (1280px)"
+            >
+              <!-- Desktop icon SVG -->
+              <svg width="24" height="20" viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="1" y="1" width="22" height="14" rx="2"/>
+                <polyline points="7,19 12,15 17,19"/>
+              </svg>
+              <span class="font-body text-xs font-medium">Desktop</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Reset -->
+        <button
+          id="reset-btn"
+          class="font-body font-medium text-sm px-4 py-2.5 rounded-lg border-2 border-gray-300 text-gray-500 hover:border-brand-secondary hover:text-brand-secondary focus:outline-none focus:ring-4 focus:ring-blue-200 transition-colors w-full"
+        >
+          Reset
+        </button>
+
+      </aside><!-- /left panel -->
+
+      <!-- ── RIGHT PANEL: canvas ────────────────────────────────────── -->
+      <div class="flex-1 flex flex-col min-h-0 min-w-0">
+
+        <!-- Warning bar -->
+        <div
+          id="warning-bar"
+          class="warning-bar rounded-lg px-4 py-2 mb-3 text-sm font-body font-medium flex items-center gap-2"
+          aria-live="polite"
+          role="status"
+          style="opacity:0; background:#FEF2F2; color:#DC2626;"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span id="warning-text"></span>
+        </div>
+
+        <!-- Viewport simulator wrapper -->
+        <div class="flex justify-center flex-1 min-h-0">
+          <div id="viewport-frame" class="viewport-frame flex flex-col bg-white border-2 border-gray-300 rounded-xl shadow-md overflow-hidden" style="width:100%; min-height:420px;">
+
+            <!-- Browser chrome bar -->
+            <div class="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 bg-gray-100 border-b border-gray-200">
+              <span class="w-2.5 h-2.5 rounded-full bg-red-400"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-green-400"></span>
+              <div class="flex-1 mx-3 bg-white rounded text-xs text-gray-400 font-body px-2 py-0.5 text-center truncate border border-gray-200" aria-hidden="true">
+                my-course.example.com
+              </div>
+              <span id="viewport-label" class="font-body text-xs text-gray-400 tabular-nums" aria-live="polite"></span>
+            </div>
+
+            <!-- Outer margin wrapper -->
+            <div id="outer-margin" class="overflow-auto p-6 grid-canvas" style="min-height:360px;">
+              <!-- Content grid rendered by JS -->
+              <div id="content-grid" class="grid gap-4" style="grid-template-columns: repeat(3, 1fr);">
+                <!-- Blocks rendered by JS -->
+              </div>
+
+              <!-- Empty state -->
+              <div id="empty-state" class="flex flex-col items-center justify-center h-40 text-gray-300">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                <p class="font-body text-sm mt-2">Add content blocks using the + buttons</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- /right panel -->
+
+    </div><!-- /workspace -->
+
+  </main>
+
+  <noscript>
+    <div style="font-family:sans-serif;padding:2rem;max-width:600px;margin:auto;">
+      <strong>Whitespace Exploration — Visual Design</strong>
+      <p>Overcrowding makes it difficult for learners to process information. Good layout design balances the amount of content on a page with adequate padding and whitespace. Too much content forces text and graphics to shrink to illegible sizes; too little content wastes screen space. Responsive design also affects this balance — a layout that works at desktop size may become unreadable on a mobile screen.</p>
+    </div>
+  </noscript>
+
+  <script>
+    // ── STRINGS (localization-ready) ──────────────────────────────────────────
+    const STRINGS = {
+      en: {
+        warningCrowded:   'Getting crowded — content is shrinking. Try reducing items or increasing padding.',
+        warningVerySmall: 'Text is too small to read. This layout would frustrate learners.',
+        paddingLabel:     (v) => `${v}px`,
+        viewportMobile:   '375px',
+        viewportTablet:   '768px',
+        viewportDesktop:  'Full width',
+      }
+    };
+    const t = STRINGS['en'];
+
+    // ── BLOCK DEFINITIONS ─────────────────────────────────────────────────────
+    // Each type: { id, label, description, svgIcon, defaultCount }
+    const BLOCK_TYPES = [
+      {
+        id: 'heading',
+        label: 'Heading',
+        description: 'Section title',
+        color: '#EFF6FF',
+        border: '#BFDBFE',
+        renderContent: (scale) => {
+          const titlePx = Math.max(8,  Math.round(18 * scale));
+          const bodyPx  = Math.max(7,  Math.round(13 * scale));
+          const pad     = Math.max(6,  Math.round(14 * scale));
+          const gap     = Math.max(3,  Math.round(8  * scale));
+          return `
+            <div style="padding:${pad}px; font-family:'Inter',sans-serif;">
+              <div style="font-size:${titlePx}px; font-weight:700; color:#1B3A5C; line-height:1.2; margin-bottom:${gap}px;">
+                Module 3: Designing for Learners
+              </div>
+              <div style="font-size:${bodyPx}px; color:#2E7BB8; font-weight:500; line-height:1.3;">
+                Visual Design Fundamentals
+              </div>
+            </div>`;
+        }
+      },
+      {
+        id: 'text',
+        label: 'Body Text',
+        description: 'Paragraph block',
+        color: '#F8FAFB',
+        border: '#CBD5E1',
+        renderContent: (scale) => {
+          const bodyPx  = Math.max(7, Math.round(13 * scale));
+          const pad     = Math.max(6, Math.round(14 * scale));
+          const lineH   = Math.max(1.2, 1.5);
+          return `
+            <div style="padding:${pad}px; font-family:'Inter',sans-serif; font-size:${bodyPx}px; color:#374151; line-height:${lineH};">
+              Effective learning design balances content density with visual breathing room.
+              When too many elements compete for attention, cognitive load increases and
+              retention drops. Whitespace is not wasted space — it is a design tool that
+              guides the learner's eye and signals what matters most on the screen.
+            </div>`;
+        }
+      },
+      {
+        id: 'media',
+        label: 'Image & Video',
+        description: 'Graphic or media',
+        color: '#F0F9FF',
+        border: '#BAE6FD',
+        renderContent: (scale) => {
+          const h      = Math.max(32, Math.round(90 * scale));
+          const iconW  = Math.max(14, Math.round(32 * scale));
+          const labelPx = Math.max(7, Math.round(11 * scale));
+          const pad    = Math.max(4, Math.round(8  * scale));
+          // Alternating landscape placeholder with icon + label
+          return `
+            <div style="padding:${pad}px; font-family:'Inter',sans-serif;">
+              <div style="height:${h}px; background:linear-gradient(135deg, #0EA5E9 0%, #0369A1 100%); border-radius:5px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:${Math.max(3,Math.round(6*scale))}px; position:relative; overflow:hidden;">
+                <!-- Decorative grid lines for depth -->
+                <div style="position:absolute;inset:0;opacity:0.08;background-image:linear-gradient(white 1px,transparent 1px),linear-gradient(90deg,white 1px,transparent 1px);background-size:${Math.max(8,Math.round(20*scale))}px ${Math.max(8,Math.round(20*scale))}px;"></div>
+                <!-- Play button -->
+                <div style="width:${iconW*1.5}px;height:${iconW*1.5}px;border-radius:50%;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;border:${Math.max(1,Math.round(2*scale))}px solid rgba(255,255,255,0.5);">
+                  <svg width="${iconW*0.6}" height="${iconW*0.6}" viewBox="0 0 16 16" fill="white" aria-hidden="true"><polygon points="4,2 14,8 4,14"/></svg>
+                </div>
+                <div style="font-size:${labelPx}px; color:rgba(255,255,255,0.85); font-weight:500; z-index:1;">
+                  Introduction to Layout Principles
+                </div>
+              </div>
+            </div>`;
+        }
+      },
+    ];
+
+    // ── DEVICE CONFIG ─────────────────────────────────────────────────────────
+    const DEVICES = {
+      mobile:  { label: t.viewportMobile,  maxWidthPx: 375  },
+      tablet:  { label: t.viewportTablet,  maxWidthPx: 768  },
+      desktop: { label: t.viewportDesktop, maxWidthPx: null },
+    };
+
+    // ── INITIAL STATE ─────────────────────────────────────────────────────────
+    const INITIAL_STATE = {
+      device:  'desktop',
+      padding: 16,
+      blocks: {
+        heading:  1,
+        text:     1,
+        media:    1,
+      }
+    };
+
+    let state = JSON.parse(JSON.stringify(INITIAL_STATE));
+
+    // ── DERIVED VALUES ────────────────────────────────────────────────────────
+
+    // Total number of blocks currently on canvas
+    function totalBlocks() {
+      return Object.values(state.blocks).reduce((s, n) => s + n, 0);
+    }
+
+    // Compute scale factor: starts shrinking after 6 blocks
+    function computeScale() {
+      const n = totalBlocks();
+      if (n <= 3) return 1;
+      // Scale down from 1 to 0.35 as blocks go from 3 to 18
+      return Math.max(0.35, 1 - ((n - 3) / 15) * 0.65);
+    }
+
+    // Crowding level: 'ok' | 'warning' | 'danger'
+    function crowdingLevel() {
+      const scale = computeScale();
+      if (scale < 0.55) return 'danger';
+      if (scale < 0.78) return 'warning';
+      return 'ok';
+    }
+
+    // ── RENDER FUNCTIONS ──────────────────────────────────────────────────────
+
+    // Render the full UI from state
+    function render() {
+      renderPalette();
+      renderGrid();
+      renderViewport();
+      renderPaddingSlider();
+      renderWarningBar();
+    }
+
+    // Render palette +/- buttons
+    function renderPalette() {
+      const palette = document.getElementById('palette');
+      palette.innerHTML = '';
+      BLOCK_TYPES.forEach(type => {
+        const count = state.blocks[type.id];
+        const row = document.createElement('div');
+        row.className = 'flex items-center justify-between gap-2';
+
+        const label = document.createElement('span');
+        label.className = 'font-body text-sm text-gray-700 flex-1';
+        label.textContent = type.label;
+
+        const controls = document.createElement('div');
+        controls.className = 'flex items-center gap-1';
+
+        const minusBtn = document.createElement('button');
+        minusBtn.className = 'w-7 h-7 rounded-md border-2 border-gray-200 text-gray-500 font-semibold text-base flex items-center justify-center hover:border-brand-secondary hover:text-brand-secondary focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors disabled:opacity-30 disabled:cursor-not-allowed';
+        minusBtn.textContent = '−';
+        minusBtn.disabled = count <= 1;
+        minusBtn.setAttribute('aria-label', `Remove ${type.label} block`);
+        minusBtn.addEventListener('click', () => handleRemoveBlock(type.id));
+
+        const countEl = document.createElement('span');
+        countEl.className = 'font-body text-sm font-semibold text-brand-primary tabular-nums w-5 text-center';
+        countEl.textContent = count;
+        countEl.setAttribute('aria-live', 'polite');
+        countEl.setAttribute('aria-label', `${count} ${type.label} block${count !== 1 ? 's' : ''}`);
+
+        const plusBtn = document.createElement('button');
+        plusBtn.className = 'w-7 h-7 rounded-md border-2 border-gray-200 text-gray-500 font-semibold text-base flex items-center justify-center hover:border-brand-accent hover:text-brand-accent focus:outline-none focus:ring-2 focus:ring-orange-300 transition-colors';
+        plusBtn.textContent = '+';
+        plusBtn.setAttribute('aria-label', `Add ${type.label} block`);
+        plusBtn.addEventListener('click', () => handleAddBlock(type.id));
+
+        controls.appendChild(minusBtn);
+        controls.appendChild(countEl);
+        controls.appendChild(plusBtn);
+        row.appendChild(label);
+        row.appendChild(controls);
+        palette.appendChild(row);
+      });
+    }
+
+    // Render content blocks in the canvas grid
+    function renderGrid() {
+      const grid       = document.getElementById('content-grid');
+      const emptyState = document.getElementById('empty-state');
+      const scale      = computeScale();
+      const padding    = state.padding;
+      const n          = totalBlocks();
+
+      // Update outer margin padding
+      document.getElementById('outer-margin').style.padding = `${padding * 1.5}px`;
+
+      // Show/hide empty state
+      emptyState.style.display = 'none';
+      grid.style.display       = 'grid';
+
+      // Adjust columns: 1 col on mobile device, 2 on tablet, 3 on desktop
+      const cols = state.device === 'mobile' ? 1 : state.device === 'tablet' ? 2 : 3;
+      grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+      grid.style.gap = `${Math.max(4, Math.round(padding * 0.75))}px`;
+
+      // Rebuild blocks
+      grid.innerHTML = '';
+      BLOCK_TYPES.forEach(type => {
+        const count = state.blocks[type.id];
+        for (let i = 0; i < count; i++) {
+          const block = document.createElement('div');
+          block.className = 'content-block rounded overflow-hidden';
+          block.style.border      = `1px solid ${type.border}`;
+          block.style.background  = type.color;
+          block.style.fontSize    = `${Math.max(8, Math.round(13 * scale))}px`;
+          block.innerHTML = type.renderContent(scale);
+          grid.appendChild(block);
+        }
+      });
+
+      // Overcrowded class for pulse warning
+      const frame = document.getElementById('viewport-frame');
+      if (crowdingLevel() === 'danger') {
+        frame.classList.add('overcrowded');
+      } else {
+        frame.classList.remove('overcrowded');
+      }
+    }
+
+    // Render viewport frame width based on selected device
+    function renderViewport() {
+      const frame  = document.getElementById('viewport-frame');
+      const vpLabel = document.getElementById('viewport-label');
+      const device  = DEVICES[state.device];
+
+      if (device.maxWidthPx) {
+        frame.style.maxWidth = device.maxWidthPx + 'px';
+        frame.style.width    = device.maxWidthPx + 'px';
+      } else {
+        frame.style.maxWidth = '100%';
+        frame.style.width    = '100%';
+      }
+
+      vpLabel.textContent = device.label;
+
+      // Update device button states
+      document.querySelectorAll('.device-btn').forEach(btn => {
+        const isActive = btn.dataset.device === state.device;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+    }
+
+    // Render padding slider value display
+    function renderPaddingSlider() {
+      const slider = document.getElementById('padding-slider');
+      const label  = document.getElementById('padding-value');
+      slider.value = state.padding;
+      label.textContent = t.paddingLabel(state.padding);
+    }
+
+    // Render warning bar
+    function renderWarningBar() {
+      const bar      = document.getElementById('warning-bar');
+      const textEl   = document.getElementById('warning-text');
+      const level    = crowdingLevel();
+
+      if (level === 'danger') {
+        bar.style.opacity         = '1';
+        bar.style.backgroundColor = '#FEF2F2';
+        bar.style.color           = '#DC2626';
+        textEl.textContent        = t.warningVerySmall;
+      } else if (level === 'warning') {
+        bar.style.opacity         = '1';
+        bar.style.backgroundColor = '#FFFBEB';
+        bar.style.color           = '#B45309';
+        textEl.textContent        = t.warningCrowded;
+      } else {
+        bar.style.opacity = '0';
+        textEl.textContent = '';
+      }
+    }
+
+    // ── HANDLERS ─────────────────────────────────────────────────────────────
+
+    // Add a block of the given type
+    function handleAddBlock(typeId) {
+      state.blocks[typeId]++;
+      render();
+    }
+
+    // Remove a block of the given type
+    function handleRemoveBlock(typeId) {
+      if (state.blocks[typeId] > 1) {
+        state.blocks[typeId]--;
+        render();
+      }
+    }
+
+    // Padding slider changed
+    function handlePaddingChange(value) {
+      state.padding = parseInt(value, 10);
+      render();
+    }
+
+    // Device button selected
+    function handleDeviceChange(device) {
+      state.device = device;
+      render();
+    }
+
+    // Reset all state to initial values
+    function resetState() {
+      state = JSON.parse(JSON.stringify(INITIAL_STATE));
+      render();
+    }
+
+    // ── EVENT LISTENERS ───────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+
+      // Padding slider
+      document.getElementById('padding-slider').addEventListener('input', (e) => {
+        handlePaddingChange(e.target.value);
+      });
+
+      // Device buttons
+      document.querySelectorAll('.device-btn').forEach(btn => {
+        btn.addEventListener('click', () => handleDeviceChange(btn.dataset.device));
+      });
+
+      // Reset button
+      document.getElementById('reset-btn').addEventListener('click', resetState);
+
+      // Initial render
+      render();
+    });
+  </script>
+
+</body>
+</html>
